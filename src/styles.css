@@ -1,1 +1,22 @@
-/* You can add global styles to this file, and also import other style files */
+/* styles.css or tailwind.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* styles.css or tailwind.css */
+.loader {
+  border-top-color: #3498db;
+  animation: spinner 0.6s linear infinite;
+}
+
+@keyframes spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

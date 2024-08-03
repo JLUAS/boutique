@@ -1,0 +1,33 @@
+<section class="h-screen flex items-center justify-center bg-img">
+  <div class="bg-pickledBluewood p-8 rounded-lg shadow-lg w-11/12 max-w-md">
+    <h2 class="text-center text-3xl font-bold text-white mb-6">Punto de venta UAS</h2>
+    <form class="space-y-6">
+      <div>
+        <label for="user" class="block mb-2 text-sm font-medium text-white">Nombre de usuario</label>
+        <input [(ngModel)]="user.username" id="user" name="user" matInput type="text" class="bg-gray-200 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required/>
+      </div>
+      <div>
+        <label for="password" class="block mb-2 text-sm font-medium text-white">Contraseña</label>
+        <div class="flex flex-row">
+          <input [(ngModel)]="user.password" id="password" name="password" matInput [type]="hide() ? 'password' : 'text'" class="bg-gray-200 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 pr-10" required/>
+          <button type="button" mat-icon-button matSuffix class="absolute inset-y-0 right-0 flex items-center pr-3" (click)="clickEvent($event)" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide()">
+            <mat-icon [ngStyle]="{'color': iconColor}">{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+        </div>
+      </div>
+      <div *ngIf="!isLoading && !admin">
+        <button type="button" (click)="userLogin()" class="w-full text-white bg-cinnabar hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Inicia sesión</button>
+      </div>
+      <div *ngIf="!isLoading && admin">
+        <button type="button" (click)="adminLogin()" class="w-full text-white bg-cinnabar hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Inicia sesión</button>
+      </div>
+      <p class="text-red-600 text-sm text-right">{{msgError}}</p>
+      <div *ngIf="isLoading" class="flex items-center justify-center mt-4">
+        <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12"></div>
+      </div>
+      <div class="mt-5 text-center">
+        <p (click)="loginMsg()" class="text-sm text-white opacity-70 hover:underline cursor-pointer">{{msg}}</p>
+      </div>
+    </form>
+  </div>
+</section>

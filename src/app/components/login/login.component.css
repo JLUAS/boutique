@@ -1,0 +1,8 @@
+mat-form-field {
+  background-color: white !important;
+}
+.bg-img{
+  background-image: url( '../../assets/img/new_file.svg' );
+  background-size: cover;
+  background-position: center;
+}
