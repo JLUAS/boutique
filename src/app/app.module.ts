@@ -29,6 +29,9 @@ import { VerOrdenesComponent } from './pages/ver-ordenes/ver-ordenes.component';
 import { EditarOrdenComponent } from './pages/editar-orden/editar-orden.component';
 import { UserDashboardComponent } from './pages/user-dashboard/user-dashboard.component';
 import { UserNavComponent } from './components/user-nav/user-nav.component';
+import { CrearCategoriaComponent } from './components/crear-categoria/crear-categoria.component';
+import { CrearProductoComponent } from './components/crear-producto/crear-producto.component';
+import { VerProductosComponent } from './components/ver-productos/ver-productos.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +50,10 @@ import { UserNavComponent } from './components/user-nav/user-nav.component';
     VerOrdenesComponent,
     EditarOrdenComponent,
     UserDashboardComponent,
-    UserNavComponent
+    UserNavComponent,
+    CrearCategoriaComponent,
+    CrearProductoComponent,
+    VerProductosComponent
   ],
   imports: [
     MatDialogModule,

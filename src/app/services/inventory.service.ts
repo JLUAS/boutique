@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Item } from '../../../../intgamestudio/src/app/models/Item';
-import { Planograma } from '../../../../intgamestudio/src/app/models/Planograma';
+import { Item } from '../models/Item';
+import { Planograma } from '../models/Planograma';
+import { Categoria } from '../models/Categoria';
+import { Producto, ProductoEditable } from '../models/Producto';
 
 @Injectable({
   providedIn: 'root'
@@ -116,5 +118,42 @@ export class InventoryService {
   }
   getFrentesUser(planograma: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/datosFrentesUser/frentes/${planograma}`);
+  }
+
+
+  // Punto de venta
+
+  postCategory(Categoria: any): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    });
+    return this.http.post(`${this.apiUrl}/admin/create/category`, Categoria, { headers });
+  }
+
+  getCategories(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/admin/get/categories`);
+  }
+
+  postProduct(Producto: Producto): Observable<any>{
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    });
+    return this.http.post(`${this.apiUrl}/admin/create/product`, Producto, { headers });
+  }
+
+  getProducts(): Observable<any>{
+    return this.http.get(`${this.apiUrl}/admin/get/products`);
+  }
+
+  getProductsByCategory(categoria: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/admin/get/products/category`, {
+      params: { categoria }
+    });
+  }
+  updateProduct(producto: any): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    });
+    return this.http.put(`${this.apiUrl}/admin/update/product/${producto.id}`, producto, { headers });
   }
 }

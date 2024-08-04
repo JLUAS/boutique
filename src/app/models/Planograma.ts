@@ -11,4 +11,4 @@ export interface Planograma {
   degradado: number;
   espacio: number;
 }
-// aaa
+
