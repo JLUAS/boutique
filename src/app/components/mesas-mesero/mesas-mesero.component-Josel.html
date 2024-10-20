@@ -1,0 +1,97 @@
+<ng-container class="flex flex-col items-center p-4 sm:p-6 md:p-8">
+  <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex flex-row items-center mb-4" (click)="recargarMesas()">
+    <div *ngIf="!isLoading" class="flex flex-row items-center justify-center">
+      <svg class="w-6 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+        <path fill="#ffffff" d="M463.5 224l8.5 0c13.3 0 24-10.7 24-24l0-128c0-9.7-5.8-18.5-14.8-22.2s-19.3-1.7-26.2 5.2L413.4 96.6c-87.6-86.5-228.7-86.2-315.8 1c-87.5 87.5-87.5 229.3 0 316.8s229.3 87.5 316.8 0c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0c-62.5 62.5-163.8 62.5-226.3 0s-62.5-163.8 0-226.3c62.2-62.2 162.7-62.5 225.3-1L327 183c-6.9 6.9-8.9 17.2-5.2 26.2s12.5 14.8 22.2 14.8l119.5 0z"/>
+      </svg>
+      Recargar mesas
+    </div>
+    <div *ngIf="isLoading" class="flex items-center justify-center w-8 h-8">
+      <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200"></div>
+    </div>
+  </button>
+  <div class="relative overflow-x-auto sm:rounded-md w-full">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
+      <ng-container *ngFor="let mesa of mesas">
+        <button (click)="openEditModal(mesa)" class="bg-mystic w-full shadow-md rounded-lg p-6 flex flex-col items-center aspect-square">
+          <div class="flex-shrink-0 self-start">
+            <div class="w-8 h-8 rounded-full mb-2" [ngClass]="{'bg-green-500': mesa.estado === 'activa', 'bg-red-500': mesa.estado !== 'activa'}"></div>
+          </div>
+          <div class="flex-grow flex flex-col justify-center items-center">
+            <h3 class="md:text-3xl text-2xl font-semibold text-center">Mesa {{ mesa.mesa }}</h3>
+          </div>
+        </button>
+      </ng-container>
+    </div>
+  </div>
+  <div *ngIf="isEditModalOpen" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 p-4 overflow-y-auto">
+    <div class="bg-white rounded-lg p-8 lg:w-5/6 w-full h-2/3 mx-auto overflow-y-auto">
+      <div class="w-full">
+        <form class="bg-white rounded px-8 pt-6 pb-8 mb-4 flex flex-col">
+          <div class="mb-4 text-left">
+            <p class="text-3xl font-bold appearance-none rounded w-full py-2 px-3 text-gray-900 leading-tight" id="mesa" [(ngModel)]="mesa.mesa" name="mesa">Mesa {{mesa.mesa}}</p>
+          </div>
+          <div class="md:flex md:flex-col">
+            <div class="w-full flex flex-wrap mb-4">
+              <button class="bg-gray-200 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded m-2" (click)="filterProductsByCategory('')">Todas</button>
+              <button *ngFor="let category of categories" class="bg-gray-200 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded m-2" (click)="filterProductsByCategory(category)">{{category}}</button>
+            </div>
+            <div class="w-full grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4">
+              <button class="aspect-square m-4 hover:border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-200 transform hover:scale-105" *ngFor="let producto of filteredProducts" (click)="addProductToCart(producto)" [ngClass]="getProductColor(producto)">
+                <h4 class="text-2xl text-center">{{producto.nombre}}</h4>
+                <p>{{producto.precio | currency}}</p>
+              </button>
+            </div>
+            <div class="w-full p-4 bg-gray-100 border-black border-2 border-opacity-10 h-full shadow-lg rounded-lg overflow-y-auto">
+              <div class="text-black" *ngIf="ordenes.length === 0">
+                <p>Sin datos para crear orden</p>
+              </div>
+              <table *ngIf="ordenes.length > 0" class="w-full table-auto border border-gray-200">
+                <thead>
+                  <tr class="bg-gray-600">
+                    <th class="px-4 py-2 text-left text-lg font-bold text-gray-100 border-b border-gray-200">Producto</th>
+                    <th class="px-4 py-2 text-left text-lg font-bold text-gray-100 border-b border-gray-200">Cantidad</th>
+                    <th class="px-4 py-2 text-left text-lg font-bold text-gray-100 border-b border-gray-200">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let orden of ordenes" class="bg-gray-50 hover:bg-gray-100">
+                    <td class="px-4 py-2 text-left text-md font-bold text-gray-900 border-b border-gray-200 border-1">{{orden.producto}}</td>
+                    <td class="px-4 py-2 text-left text-md font-bold text-gray-900 border-b border-gray-200 border-1 flex items-center">
+                      <button (click)="orden.cantidad = orden.cantidad > 1 ? orden.cantidad - 1 : 1" class="mr-2">
+                        <svg class="w-6 h-6 text-gray-500 hover:text-gray-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                          <path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd"></path>
+                        </svg>
+                      </button>
+                      <input class="w-20 shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="number" [(ngModel)]="orden.cantidad" name="cantidad">
+                      <button (click)="orden.cantidad = orden.cantidad + 1" class="ml-2">
+                        <svg class="w-6 h-6 text-gray-500 hover:text-gray-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                          <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path>
+                        </svg>
+                      </button>
+                    </td>
+                    <td class="px-4 py-2 text-left text-md font-bold text-gray-900 border-b border-gray-200 border-1">
+                      <button (click)="removeOrder(orden)" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded">
+                        Eliminar
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="flex justify-end mt-4">
+                <button *ngIf="ordenes.length > 0" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline" type="button" (click)="createOrder()" (click)="saveChanges()">
+                  Finalizar orden
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center justify-end mt-4">
+            <button class="ml-5 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline" type="button" (click)="closeEditModal()">
+              Cancelar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-container>

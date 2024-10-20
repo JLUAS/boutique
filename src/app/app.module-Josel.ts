@@ -36,6 +36,8 @@ import { MesaComponent } from './components/mesa/mesa.component';
 import { VerMesasComponent } from './pages/ver-mesas/ver-mesas.component';
 import { MesasCreadasComponent } from './components/mesas-creadas/mesas-creadas.component';
 import { MesasMeseroComponent } from './components/mesas-mesero/mesas-mesero.component';
+import { FinalizarOrdenComponent } from './pages/finalizar-orden/finalizar-orden.component';
+import { MesasConOrdenComponent } from './components/mesas-con-orden/mesas-con-orden.component';
 
 @NgModule({
   declarations: [
@@ -61,7 +63,9 @@ import { MesasMeseroComponent } from './components/mesas-mesero/mesas-mesero.com
     MesaComponent,
     VerMesasComponent,
     MesasCreadasComponent,
-    MesasMeseroComponent
+    MesasMeseroComponent,
+    FinalizarOrdenComponent,
+    MesasConOrdenComponent
   ],
   imports: [
     MatDialogModule,

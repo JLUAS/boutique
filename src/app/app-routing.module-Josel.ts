@@ -14,6 +14,7 @@ import { VerOrdenesComponent } from './pages/ver-ordenes/ver-ordenes.component';
 import { EditarOrdenComponent } from './pages/editar-orden/editar-orden.component';
 import { MesaComponent } from './components/mesa/mesa.component';
 import { VerMesasComponent } from './pages/ver-mesas/ver-mesas.component';
+import { FinalizarOrdenComponent } from './pages/finalizar-orden/finalizar-orden.component';
 
 const routes: Routes = [
   {path: '', component:LoginComponent},
@@ -29,6 +30,7 @@ const routes: Routes = [
   {path:"usuario/crear/orden", component:CrearOrdenComponent, canActivate: [AuthGuard]},
   {path:"usuario/ver/orden", component:VerOrdenesComponent, canActivate: [AuthGuard]},
   {path:"usuario/editar/orden", component:EditarOrdenComponent, canActivate: [AuthGuard]},
+  {path:"usuario/finalizar/orden", component:FinalizarOrdenComponent, canActivate: [AuthGuard]},
   {path:"usuario/dashboard", component:CrearOrdenComponent, canActivate: [AuthGuard]},
   {path:"**", redirectTo:"login"},
 ];

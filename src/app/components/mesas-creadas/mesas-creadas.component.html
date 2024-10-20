@@ -1,0 +1,60 @@
+<ng-container class="flex flex-col">
+  <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex flex-row items-center" (click)="recargarMesas()">
+    <div *ngIf="!isLoading" class="flex flex-row">
+      <svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+        <path fill="#ffffff" d="M463.5 224l8.5 0c13.3 0 24-10.7 24-24l0-128c0-9.7-5.8-18.5-14.8-22.2s-19.3-1.7-26.2 5.2L413.4 96.6c-87.6-86.5-228.7-86.2-315.8 1c-87.5 87.5-87.5 229.3 0 316.8s229.3 87.5 316.8 0c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0c-62.5 62.5-163.8 62.5-226.3 0s-62.5-163.8 0-226.3c62.2-62.2 162.7-62.5 225.3-1L327 183c-6.9 6.9-8.9 17.2-5.2 26.2s12.5 14.8 22.2 14.8l119.5 0z"/>
+    </svg>
+      Recargar mesas
+    </div>
+    <div *ngIf="isLoading" class="flex items-center justify-center w-8 h-8">
+      <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 "></div>
+    </div>
+  </button>
+  <div class="relative overflow-x-auto shadow-md sm:rounded-md mt-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+      <ng-container *ngFor="let mesa of mesas">
+        <button (click)="openEditModal(mesa)"  class="bg-mystic w-full shadow-md rounded-lg p-4 flex flex-col ">
+          <div class="w-4 h-4 rounded-full mb-2" [ngClass]="{'bg-green-500': mesa.estado === 'activa', 'bg-red-500': mesa.estado !== 'activa'}"></div>
+          <h3 class="text-xl font-semibold text-center text-gray-900">Número de mesa</h3>
+          <p class="text-gray-700 mb-4 text-2xl text-center">{{ mesa.mesa }}</p>
+          <h4 class="text-md font-semibold mb-2 text-xl text-center text-gray-900">Estatus</h4>
+          <p class="text-gray-600 text-lg text-center">{{ mesa.estado }}</p>
+        </button>
+      </ng-container>
+    </div>
+  </div>
+  <div *ngIf="isEditModalOpen" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20">
+    <div class="bg-white rounded-lg p-8 lg:w-1/3 w-11/12 mx-auto">
+      <div class="w-full">
+        <form class="bg-white rounded px-8 pt-6 pb-8 mb-4">
+          <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="mesa">
+              Numero de mesa
+            </label>
+            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="mesa" type="number" [(ngModel)]="mesa.mesa" name="mesa">
+          </div>
+          <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="estado">
+              Estado
+            </label>
+            <select class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="estado" [(ngModel)]="mesa.estado" name="estado">
+              <option value="activa">Activa</option>
+              <option value="inactiva">Inactiva</option>
+            </select>
+          </div>
+
+          <p class="text-red-500 text-sm text-left mb-2">{{alertPostMsg}}</p>
+          <div class="flex items-center justify-end">
+            <button class="ml-5 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline" type="button" (click)="saveChanges()">
+              Guardar cambios
+            </button>
+            <button class="ml-5 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline" type="button" (click)="closeEditModal()">
+              Cancelar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</ng-container>
