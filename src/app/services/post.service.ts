@@ -4,8 +4,8 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { catchError, first } from "rxjs/operators";
 
-import { Post } from "../../../../intgamestudio/src/app/models/Post";
-import { User } from "../../../../intgamestudio/src/app/models/User";
+import { Post } from "../models/Post";
+import { User } from "../models/User";
 import { ErrorHandlerService } from "./error-handler.service";
 
 @Injectable({

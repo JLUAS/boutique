@@ -129,9 +129,13 @@ export class InventoryService {
     });
     return this.http.post(`${this.apiUrl}/admin/create/category`, Categoria, { headers });
   }
-
+  //Obtener categorias de rol como admin
   getCategories(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/admin/get/categories`);
+    return this.http.get(`${this.apiUrl}/admin/get/rol`);
+  }
+  //Obtener todas las categorias como super
+  getAllCategories(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/admin/get/rol/super`);
   }
 
   postProduct(Producto: Producto): Observable<any>{
@@ -144,16 +148,44 @@ export class InventoryService {
   getProducts(): Observable<any>{
     return this.http.get(`${this.apiUrl}/admin/get/products`);
   }
-
-  getProductsByCategory(categoria: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/admin/get/products/category`, {
+  //Obtener usuarios como admin por categoria
+  getUsersByCategory(categoria: string, username: any): Observable<any> {
+    return this.http.get(`${this.apiUrl}/admin/get/users/rol`, {
+      params: { categoria, username }
+    });
+  }
+  //Obtener usuarios como super por categoria
+  getUsersByCategorySuper(categoria: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/admin/get/users/rol/super`, {
       params: { categoria }
     });
   }
-  updateProduct(producto: any): Observable<any> {
+  //Obtener todos los usuarios como admin
+  getUsers(username: any): Observable<any> {
+    return this.http.get(`${this.apiUrl}/admin/get/users`,{
+    params : { username}
+    });
+  }
+  //Obtener todos los usuarios como super
+  getAllUsers(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/admin/get/users/super`);
+  }
+  //Obtener usuarios como admin
+  getUserBusinessName(nombre: any): Observable<any> {
+    return this.http.get(`${this.apiUrl}/admin/get/users/business`, {
+      params: { nombre }
+    });
+  }
+  //Obtener usuarios como admin
+  getUserUbication(nombre: any): Observable<any> {
+    return this.http.get(`${this.apiUrl}/admin/get/users/ubicacion`, {
+      params: { nombre }
+    });
+  }
+  updateProduct(user: any): Observable<any> {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${localStorage.getItem('token')}`
     });
-    return this.http.put(`${this.apiUrl}/admin/update/product/${producto.id}`, producto, { headers });
+    return this.http.put(`${this.apiUrl}/admin/update/user/${user.id}`, user, { headers });
   }
 }

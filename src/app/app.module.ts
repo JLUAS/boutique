@@ -4,7 +4,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 import { AuthGuard } from './services/auth-guard.service';
 import { AuthInterceptorService } from './services/auth-interceptor.service';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login.component';
@@ -36,6 +35,7 @@ import { MesaComponent } from './components/mesa/mesa.component';
 import { VerMesasComponent } from './pages/ver-mesas/ver-mesas.component';
 import { MesasCreadasComponent } from './components/mesas-creadas/mesas-creadas.component';
 import { MesasMeseroComponent } from './components/mesas-mesero/mesas-mesero.component';
+import { VerUsuariosComponent } from './components/ver-usuarios/ver-usuarios.component';
 
 @NgModule({
   declarations: [
@@ -61,8 +61,9 @@ import { MesasMeseroComponent } from './components/mesas-mesero/mesas-mesero.com
     MesaComponent,
     VerMesasComponent,
     MesasCreadasComponent,
-    MesasMeseroComponent
-  ],
+    MesasMeseroComponent,
+    VerUsuariosComponent
+    ],
   imports: [
     MatDialogModule,
     MatFormFieldModule,
@@ -73,7 +74,7 @@ import { MesasMeseroComponent } from './components/mesas-mesero/mesas-mesero.com
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule,
+    HttpClientModule
   ],
   providers: [
     AuthGuard,

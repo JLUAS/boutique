@@ -55,7 +55,7 @@ export class VerProductosComponent implements OnInit {
 
   getProductsByCategory() {
     if (this.selectedCategory) {
-      this.iS.getProductsByCategory(this.selectedCategory).subscribe(
+      this.iS.getUsersByCategory(this.selectedCategory,localStorage.getItem('username')).subscribe(
         data => {
           this.products = data;
         },

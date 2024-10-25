@@ -58,7 +58,7 @@ export class AuthService {
     const token = this.getToken();
     if (!token) return null;
     const payload = JSON.parse(atob(token.split('.')[1]));
-    return payload.role;
+    return payload.rol;
   }
 
   addDatabase(username: string, baseDeDatos: string): Observable<any> {

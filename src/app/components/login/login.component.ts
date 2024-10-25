@@ -43,7 +43,7 @@ export class LoginComponent implements OnInit {
         this.isLoading = false;
         localStorage.setItem('token', res.token);
         localStorage.setItem('username', this.user.username);
-        this.router.navigate(['/usuario/crear/orden']);
+        this.router.navigate(['/usuario']);
       },
       (err) => {
         this.isLoading = false;
@@ -62,7 +62,7 @@ export class LoginComponent implements OnInit {
         this.isLoading = false;
         localStorage.setItem('token', res.token);
         localStorage.setItem('username', this.user.username);
-        this.router.navigate(['/dashboard/ventas']);
+        this.router.navigate(['/dashboard']);
       },
       (err) => {
         this.isLoading = false;
