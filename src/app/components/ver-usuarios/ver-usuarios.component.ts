@@ -39,7 +39,7 @@ export class VerUsuariosComponent {
   ngOnInit(): void {
     this.getCategories();
     this.selectedCategory = this.categories[0]
-    this.getUsersByCategory()
+    this.getUsers()
   }
 
   getCategories() {
@@ -91,17 +91,18 @@ export class VerUsuariosComponent {
       );
       }
 
-    }else{
-      this.iS.getUsers(localStorage.getItem('username')).subscribe(
-        data => {
-          this.users = data;
-        },
-        error => {
-          console.error('Error fetching products by category', error);
-        }
-      );
     }
 
+  }
+  getUsers(){
+    this.iS.getUsers(localStorage.getItem('username')).subscribe(
+      data => {
+        this.users = data;
+      },
+      error => {
+        console.error('Error fetching products by category', error);
+      }
+    );
   }
 
   saveChanges() {

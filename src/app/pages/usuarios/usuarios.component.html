@@ -1,9 +1,15 @@
-<section class="flex bg-mystic h-dvh">
-  <app-nav class="md:w-64"></app-nav>
-  <main class="flex-1 m-8 p-4 rounded-lg bg-white flex flex-col h-fit">
-    <div class="flex md:flex-row sm:flex-col">
-      <app-signup class="mr-5"></app-signup> <app-signup-admin class="mr-5"></app-signup-admin>
+<section class="flex bg-mystic h-screen flex-row md:flex-row">
+  <!-- Nav -->
+  <app-nav class="p-10"></app-nav>
+  <!-- Main -->
+  <main class=" p-8 rounded-lg bg-white flex flex-col h-fit w-[80%] ml-[16%]">
+
+    <!-- Signup forms (adjust based on screen size) -->
+    <div class="flex flex-col md:flex-row">
+      <app-signup class="mb-5 md:mb-0 md:mr-5"></app-signup>
+      <app-signup-admin class="mb-5 md:mb-0 md:mr-5"></app-signup-admin>
     </div>
+    <!-- Usuarios -->
     <app-ver-usuarios class="mt-5"></app-ver-usuarios>
   </main>
 </section>
