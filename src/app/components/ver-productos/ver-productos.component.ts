@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { InventoryService } from '../../services/inventory.service';
 import { Producto } from '../../models/Producto';
-
+import { DomSanitizer,SafeUrl } from '@angular/platform-browser';
+import { FileService } from '../../services/file.service';
+import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'app-ver-productos',
   templateUrl: './ver-productos.component.html',
@@ -11,12 +13,11 @@ export class VerProductosComponent implements OnInit {
   categories: string[] = [];
   selectedCategory: string = '';
   products: any[] = [];
-  producto: Producto = { nombre: '', precio: 0, categoria: '', estado: '' };
+  producto: Producto = { nombre: '', precio: 0, categoria: '', estado: '' , imagen: null, descripcion: '', nombre_negocio: ''};
   isModalOpen = false;
   isEditModalOpen = false;
-
+  rolSuper: boolean = false;
   alertPostMsg: string = '';
-
   openModal() {
     this.isModalOpen = true;
   }
@@ -33,12 +34,18 @@ export class VerProductosComponent implements OnInit {
   closeEditModal() {
     this.isEditModalOpen = false;
   }
-  constructor(private iS: InventoryService) {}
+  constructor(private iS: InventoryService, private fileService: FileService, private sanitizer: DomSanitizer, private aS: AuthService) {}
+  fileUrl: SafeUrl | null = null;
 
   ngOnInit(): void {
-    this.getCategories();
-    this.selectedCategory = this.categories[0]
-    this.getProductsByCategory()
+    // this.getCategories();
+    // this.selectedCategory = this.categories[0]
+    // this.getProductsByCategory()
+    if( this.aS.getRole() == 'super'){this.rolSuper = true
+    }else{
+      this.rolSuper = false;
+    }
+
   }
 
   getCategories() {

@@ -10,8 +10,8 @@ import { Producto, ProductoEditable } from '../models/Producto';
   providedIn: 'root'
 })
 export class InventoryService {
-  private apiUrl = 'https://boutique-t9xx.onrender.com';
-
+  // private apiUrl = 'https://boutique-t9xx.onrender.com';
+  private apiUrl = 'http://localhost:3000';
   constructor(private http: HttpClient) { }
 
   getAdminDatabase(): Observable<any[]> {
@@ -138,7 +138,7 @@ export class InventoryService {
     return this.http.get(`${this.apiUrl}/admin/get/rol/super`);
   }
 
-  postProduct(Producto: Producto): Observable<any>{
+  postProduct(Producto: FormData): Observable<any>{
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${localStorage.getItem('token')}`
     });

@@ -3,6 +3,9 @@ export interface Producto {
   precio: number;
   categoria: string;
   estado: string;
+  imagen: File | null;
+  descripcion: string;
+  nombre_negocio: string;
 }
 export interface ProductoEditable {
   id:number
@@ -10,4 +13,7 @@ export interface ProductoEditable {
   precio: number;
   categoria: string;
   estado: string;
+  imagen: File | null;
+  descripcion: string;
+  nombre_negocio: string;
 }

@@ -7,8 +7,8 @@
       <option *ngFor="let categoria of categories" [value]="categoria">{{categoria}}</option>
     </select>
   </div>
-  <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" (click)="getProductsByCategory()">
-    Ver Productos
+  <button class="boton3" >
+    Ver productos
   </button>
 
   <div class="relative overflow-x-auto shadow-md sm:rounded-md mt-4">
@@ -88,3 +88,5 @@
     </div>
   </div>
 </div>
+
+<app-ver-archivos></app-ver-archivos>

@@ -3,6 +3,23 @@
 @tailwind components;
 @tailwind utilities;
 
+
+.boton1 {
+  @apply cursor-pointer bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex items-center justify-center;
+}
+
+.boton2 {
+  @apply bg-white hover:bg-gray-200 text-blue-500 font-bold py-2 px-4 rounded border border-blue-500 flex items-center justify-center;
+}
+
+.boton3 {
+  @apply bg-transparent hover:bg-blue-500 text-blue-500 hover:text-white font-bold py-2 px-4 rounded border border-blue-500 flex items-center justify-center;
+}
+
+.botonCancelar{
+  @apply ml-5 hover:bg-gray-50 border-red-500 border-2  text-red-500 font-bold py-2 px-4 rounded-lg focus:outline-none  ;
+}
+
 /* styles.css or tailwind.css */
 .loader {
   border-top-color: #3498db;
