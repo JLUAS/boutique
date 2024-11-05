@@ -3,11 +3,11 @@
     <label class="block text-gray-700 text-sm font-bold mb-2" for="categoria">
       Categoría
     </label>
-    <select class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="categoria" name="categoria" [(ngModel)]="selectedCategory">
+    <select class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="categoria" name="categoria" [(ngModel)]="selectedCategory" (click)="getCategories()">
       <option *ngFor="let categoria of categories" [value]="categoria">{{categoria}}</option>
     </select>
   </div>
-  <button class="boton3" >
+  <button class="boton3"  (click)="getProductsByCategory()">
     Ver productos
   </button>
 
@@ -19,6 +19,8 @@
           <th scope="col" class="px-6 py-3 border-x-2 border-slate-500 w-1/5">Precio</th>
           <th scope="col" class="px-6 py-3 border-x-2 border-slate-500 w-1/5">Categoría</th>
           <th scope="col" class="px-6 py-3 border-x-2 border-slate-500 w-1/5">Estado</th>
+          <th scope="col" class="px-6 py-3 border-x-2 border-slate-500 w-1/5">Imagen</th>
+          <th scope="col" class="px-6 py-3 border-x-2 border-slate-500 w-1/5">Descripción</th>
           <th scope="col" class="px-6 py-3 border-x-2 border-slate-500 w-1/5 ">Acciones</th>
         </tr>
       </thead>
@@ -28,6 +30,10 @@
           <td class="px-6 py-4 font-medium text-gray-900 border-x-2 border-slate-500 whitespace-nowrap">{{ producto.precio | currency }}</td>
           <td class="px-6 py-4 font-medium text-gray-900 border-x-2 border-slate-500 whitespace-nowrap">{{ producto.categoria }}</td>
           <td class="px-6 py-4 font-medium text-gray-900 border-x-2 border-slate-500 whitespace-nowrap">{{ producto.estado }}</td>
+          <td class="px-6 py-4 font-medium text-gray-900 border-x-2 border-slate-500 whitespace-nowrap">
+            <img *ngIf="producto.imagenURL" [src]="producto.imagenURL" alt="Producto" class="h-16 w-16 object-cover">
+          </td>
+                    <td class="px-6 py-4 font-medium text-gray-900 border-x-2 border-slate-500 whitespace-nowrap">{{ producto.descripcion }}</td>
           <td class="px-6 py-4 font-medium text-gray-900 border-x-2 border-slate-500 whitespace-nowrap w-fit">
             <button (click)="openEditModal(producto)">
               <svg class="w-6 h-6 text-blue-500 hover:text-blue-700" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">

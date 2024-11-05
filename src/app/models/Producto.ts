@@ -6,6 +6,7 @@ export interface Producto {
   imagen: File | null;
   descripcion: string;
   nombre_negocio: string;
+  imagenURL: string
 }
 export interface ProductoEditable {
   id:number

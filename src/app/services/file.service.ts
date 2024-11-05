@@ -10,8 +10,8 @@ export class FileService {
 
   constructor(private http: HttpClient) {}
 
-  downloadFile() {
-    return this.http.get(`${this.apiUrl}/download/example`, {
+  downloadFile(nombre:any) {
+    return this.http.get(`${this.apiUrl}/download/example/${nombre}`, {
       responseType: 'blob'  // Esto permite que Angular reciba el archivo como Blob
     });
   }

@@ -9,7 +9,7 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./crear-producto.component.css']
 })
 export class CrearProductoComponent implements OnInit {
-  producto: Producto = { nombre: '', precio: 0, categoria: '', estado: '',descripcion: '', imagen:null , nombre_negocio:'' };
+  producto: Producto = { nombre: '', precio: 0, categoria: '', estado: '',descripcion: '', imagen:null , nombre_negocio:'' ,imagenURL: ''};
   isModalOpen = false;
   categories: string[] = [];
   products: any[] = [];
@@ -37,10 +37,11 @@ export class CrearProductoComponent implements OnInit {
   ngOnInit(): void {
     this.getCategories();
     this.getProducts();
-    this.getUserData();
   }
 
   openModal() {
+    this.getCategories();
+    this.getProducts();
     this.isModalOpen = true;
   }
 
@@ -49,7 +50,8 @@ export class CrearProductoComponent implements OnInit {
   }
 
   getCategories() {
-    this.iS.getCategories().subscribe(
+    this.getUserData();
+    this.iS.getCategories(this.producto.nombre_negocio).subscribe(
       data => {
         this.categories = data.map((item: any) => item.categoria);
       },
@@ -60,7 +62,7 @@ export class CrearProductoComponent implements OnInit {
   }
 
   getProducts() {
-    this.iS.getProducts().subscribe(
+    this.iS.getProducts(this.producto.nombre_negocio).subscribe(
       data => {
         this.products = data;
       },
@@ -116,13 +118,14 @@ export class CrearProductoComponent implements OnInit {
 
     this.iS.postProduct(formData).subscribe(
       () => {
+        alert('Error al registrar el producto');
+        console.error("error");
+      },
+      err => {
         alert('Producto registrado exitosamente');
         this.closeModal();
         this.getProducts(); // Actualizar la lista de productos
-      },
-      err => {
-        alert('Error al registrar el producto');
-        console.error(err);
+
       }
     );
   }

@@ -37,15 +37,15 @@ export class VerUsuariosComponent {
   constructor(private iS: InventoryService, private aS: AuthService) {}
 
   ngOnInit(): void {
-    this.getCategories();
+    this.getRol();
     this.selectedCategory = this.categories[0]
     this.getUsers()
   }
 
-  getCategories() {
+  getRol() {
     const rol = this.aS.getRole();
     if(rol == 'admin'){
-      this.iS.getCategories().subscribe(
+      this.iS.getRol().subscribe(
         data => {
           this.categories = data.map((item: any) => item.rol);
 
@@ -55,7 +55,7 @@ export class VerUsuariosComponent {
         }
       );
     }else if(rol == 'super'){
-      this.iS.getAllCategories().subscribe(
+      this.iS.getAllRol().subscribe(
         data => {
           this.categories = data.map((item: any) => item.rol);
 
@@ -68,11 +68,11 @@ export class VerUsuariosComponent {
 
   }
 
-  getUsersByCategory() {
+  getUsersByRol() {
     const rol = this.aS.getRole();
     if (this.selectedCategory == 'admin' || this.selectedCategory == 'user' || this.selectedCategory == 'super') {
       if(rol =='super'){
-        this.iS.getUsersByCategorySuper(this.selectedCategory).subscribe(
+        this.iS.getUsersByRolSuper(this.selectedCategory).subscribe(
           data => {
             this.users = data;
           },
@@ -81,7 +81,7 @@ export class VerUsuariosComponent {
           }
       );
       }else{
-        this.iS.getUsersByCategory(this.selectedCategory, localStorage.getItem('username')).subscribe(
+        this.iS.getUsersByRol(this.selectedCategory, localStorage.getItem('username')).subscribe(
           data => {
             this.users = data;
           },
@@ -110,11 +110,11 @@ export class VerUsuariosComponent {
     this.iS.updateProduct(this.user).subscribe(() => {
       alert("Producto actualizado exitosamente");
       this.closeEditModal();
-      this.getUsersByCategory();  // Refresh the product list
+      this.getUsersByRol();  // Refresh the product list
     }, err => {
       alert("Producto actualizado exitosamente");
       this.closeEditModal();
-      this.getUsersByCategory();  // Refresh the product list
+      this.getUsersByRol();  // Refresh the product list
     });
   }
 }

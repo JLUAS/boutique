@@ -10,8 +10,8 @@ import { Producto, ProductoEditable } from '../models/Producto';
   providedIn: 'root'
 })
 export class InventoryService {
-  // private apiUrl = 'https://boutique-t9xx.onrender.com';
-  private apiUrl = 'http://localhost:3000';
+  //  private apiUrl = 'https://boutique-t9xx.onrender.com';
+   private apiUrl = 'http://localhost:3000';
   constructor(private http: HttpClient) { }
 
   getAdminDatabase(): Observable<any[]> {
@@ -123,18 +123,23 @@ export class InventoryService {
 
   // Punto de venta
 
-  postCategory(Categoria: any): Observable<any> {
+  postCategory(nombreCategoria: any, nombre_negocio: any): Observable<any> {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${localStorage.getItem('token')}`
     });
-    return this.http.post(`${this.apiUrl}/admin/create/category`, Categoria, { headers });
+
+    // Pasa el body como un solo objeto en el segundo argumento
+    return this.http.post(`${this.apiUrl}/admin/create/category/${nombre_negocio}`, nombreCategoria, { headers });
   }
-  //Obtener categorias de rol como admin
-  getCategories(): Observable<any> {
+  getCategories(nombre_negocio: any): Observable<any> {
+    return this.http.get(`${this.apiUrl}/admin/get/category/${nombre_negocio}`);
+  }
+
+  //Obtener todas las categorias como super
+  getRol(): Observable<any> {
     return this.http.get(`${this.apiUrl}/admin/get/rol`);
   }
-  //Obtener todas las categorias como super
-  getAllCategories(): Observable<any> {
+  getAllRol(): Observable<any> {
     return this.http.get(`${this.apiUrl}/admin/get/rol/super`);
   }
 
@@ -144,20 +149,26 @@ export class InventoryService {
     });
     return this.http.post(`${this.apiUrl}/admin/create/product`, Producto, { headers });
   }
+  // Obtener productos por nombre de negocio
+  getProducts(nombre_negocio:any): Observable<any>{
+    return this.http.get(`${this.apiUrl}/admin/get/products`,{
+      params: nombre_negocio
+    });
+  }
 
-  getProducts(): Observable<any>{
-    return this.http.get(`${this.apiUrl}/admin/get/products`);
+  getAllProducts(): Observable<any>{
+    return this.http.get(`${this.apiUrl}/super/get/products`);
   }
   //Obtener usuarios como admin por categoria
-  getUsersByCategory(categoria: string, username: any): Observable<any> {
+  getUsersByRol(rol: string, username: any): Observable<any> {
     return this.http.get(`${this.apiUrl}/admin/get/users/rol`, {
-      params: { categoria, username }
+      params: { rol, username }
     });
   }
   //Obtener usuarios como super por categoria
-  getUsersByCategorySuper(categoria: string): Observable<any> {
+  getUsersByRolSuper(rol: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/admin/get/users/rol/super`, {
-      params: { categoria }
+      params: { rol }
     });
   }
   //Obtener todos los usuarios como admin

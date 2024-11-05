@@ -25,7 +25,6 @@ export class SignupComponent implements OnInit {
   openModal() {
     this.isModalOpen = true;
     this.getUserData()
-    console.log(this.user.nombre_negocio, this.nombre_negocio)
     this.user.nombre_negocio = this.nombre_negocio
   }
 
@@ -57,6 +56,7 @@ export class SignupComponent implements OnInit {
         }
       );
     }
+    console.log(localStorage.getItem('username'))
   }
 
   registerUser() {
@@ -77,8 +77,8 @@ export class SignupComponent implements OnInit {
 
     }else if(this.user.nombre && this.user.email && this.user.password && this.user.nombre_negocio && this.user.ubicacion && this.user.contacto){
         this.authService.registerUser(this.user).subscribe(() => {
-          alert("Usuario correctamente registrado en la base de datos");
         }, err => {
+          alert("Usuario correctamente registrado en la base de datos");
           window.location.reload()
         });
     } else {

@@ -13,11 +13,12 @@ export class CrearCategoriaComponent implements OnInit {
   categories: any[] = [];
   possiblePost: boolean = false;
   alertPostMsg: string = '';
-
+  nombre_negocio: string = ''
   constructor(private iS: InventoryService) {}
 
   ngOnInit(): void {
     this.getCategories();
+    this.getUserData();
   }
 
   openModal() {
@@ -28,8 +29,23 @@ export class CrearCategoriaComponent implements OnInit {
     this.isModalOpen = false;
   }
 
+  getUserData(){
+    this.iS.getUserBusinessName(localStorage.getItem('username')).subscribe(
+      data => {
+        if (data && data.length > 0) {
+          this.nombre_negocio = data[0].nombre_negocio;
+        }
+      },
+      error => {
+        console.error('Error fetching users by category', error);
+      }
+    );
+    console.log(localStorage.getItem('username'))
+    console.log(this.nombre_negocio)
+  }
+
   getCategories() {
-    this.iS.getCategories().subscribe(
+    this.iS.getCategories(this.nombre_negocio).subscribe(
       data => {
         this.categories = data.map((item: any) => item.categoria);
       },
@@ -40,6 +56,9 @@ export class CrearCategoriaComponent implements OnInit {
   }
 
   postCategory() {
+
+    console.log(this.nombre_negocio)
+    console.log(this.categoria)
     this.getCategories();
     let category = this.categoria.nombreCategoria.trim();
 
@@ -48,13 +67,13 @@ export class CrearCategoriaComponent implements OnInit {
       return;
     }
 
-    let categoryLowCase = category.toLowerCase();
-    if (this.categories.map(cat => cat.toLowerCase()).includes(categoryLowCase)) {
-      this.alertPostMsg = 'La categoría ya existe, intenta con otra diferente.';
-      return;
-    }
+    // let categoryLowCase = category.toLowerCase();
+    // if (this.categories.map(category => category.toLowerCase()).includes(categoryLowCase)) {
+    //   this.alertPostMsg = 'La categoría ya existe, intenta con otra diferente.';
+    //   return;
+    // }
 
-    this.iS.postCategory(this.categoria).subscribe(() => {
+    this.iS.postCategory(this.categoria, this.nombre_negocio).subscribe(() => {
       alert("Categoría registrada exitosamente");
       this.closeModal();
       this.getCategories();  // Refresh the category list

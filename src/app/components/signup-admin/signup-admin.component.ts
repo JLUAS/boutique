@@ -13,7 +13,7 @@ import { AbstractControl, ValidatorFn } from '@angular/forms';
 })
 export class SignupAdminComponent {
   categories: string[] = [];
-  user = { nombre: '', email: '', password: '', nombre_negocio: '', ubicacion: 'NA', contacto: 'NA', rol: '' };
+  user = { nombre: '', email: '', password: '', nombre_negocio: '', ubicacion: '', contacto: '', rol: '' };
   isModalOpen = false;
   selectedCategory: string = '';
   nombre_negocio: string = '';
@@ -23,21 +23,21 @@ export class SignupAdminComponent {
   confirmPassword: string = ''; // Nuevo campo para confirmar la contraseña
   users: any[] = [];
   allowedCharacters = '@$!%*?&.-_¡?¿#"!/()\'{};:';
-
+  super:boolean | undefined
   constructor(private authService: AuthService, private router: Router, private iS: InventoryService) {}
   openModal() {
     this.isModalOpen = true;
-    this.getUserData()
-    console.log(this.user.nombre_negocio, this.nombre_negocio)
-    this.user.nombre_negocio = this.nombre_negocio
-    this.iS.getCategories().subscribe(
-      data => {
-        this.categories = data.map((item: any) => item.rol);
-      },
-      error => {
-        console.error('Error fetching categories', error);
-      }
-    );
+    if(this.authService.getRole() == 'super'){
+      this.super=true
+    }else{
+      this.super= false
+    }
+    if(this.authService.getRole() != 'super'){
+      this.getUserData()
+      this.user.nombre_negocio = this.nombre_negocio
+      this.user.ubicacion = 'NA'
+    }
+
   }
 
   closeModal() {
@@ -45,7 +45,6 @@ export class SignupAdminComponent {
   }
 
   getUserData() {
-    const rol = this.authService.getRole();
     if (localStorage.getItem('username')) {
       this.iS.getUserBusinessName(localStorage.getItem('username')).subscribe(
         data => {
@@ -64,8 +63,11 @@ export class SignupAdminComponent {
     this.msgError = '';
     this.passwordError = '';
     this.passwordMismatchError = '';
-    this.user.nombre_negocio = this.nombre_negocio
-    this.getUserData();
+    if(this.authService.getRole() != 'super'){
+      this.getUserData()
+      this.user.nombre_negocio = this.nombre_negocio
+      this.user.ubicacion = 'NA'
+    }
     const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.-_¡?¿#"!/()'{};:])[A-Za-z\d@$!%*?&.-_¡?¿#"!/()'{};:]{8,12}$/;
     // Verifica si las contraseñas no coinciden
     if (this.confirmPassword !== this.user.password) {
