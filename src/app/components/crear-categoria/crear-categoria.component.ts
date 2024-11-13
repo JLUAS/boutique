@@ -17,7 +17,6 @@ export class CrearCategoriaComponent implements OnInit {
   constructor(private iS: InventoryService) {}
 
   ngOnInit(): void {
-    this.getCategories();
     this.getUserData();
   }
 
@@ -40,8 +39,6 @@ export class CrearCategoriaComponent implements OnInit {
         console.error('Error fetching users by category', error);
       }
     );
-    console.log(localStorage.getItem('username'))
-    console.log(this.nombre_negocio)
   }
 
   getCategories() {
@@ -56,9 +53,6 @@ export class CrearCategoriaComponent implements OnInit {
   }
 
   postCategory() {
-
-    console.log(this.nombre_negocio)
-    console.log(this.categoria)
     this.getCategories();
     let category = this.categoria.nombreCategoria.trim();
 

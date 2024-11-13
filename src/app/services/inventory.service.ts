@@ -155,6 +155,11 @@ export class InventoryService {
       params: nombre_negocio
     });
   }
+  getProductsByCategory(nombre_negocio:any, categoria:any): Observable<any>{
+    return this.http.get(`${this.apiUrl}/admin/get/products/category`,{
+      params: {nombre_negocio, categoria}
+    });
+  }
 
   getAllProducts(): Observable<any>{
     return this.http.get(`${this.apiUrl}/super/get/products`);
@@ -193,10 +198,24 @@ export class InventoryService {
       params: { nombre }
     });
   }
-  updateProduct(user: any): Observable<any> {
+  updateUser(user: any): Observable<any> {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${localStorage.getItem('token')}`
     });
     return this.http.put(`${this.apiUrl}/admin/update/user/${user.id}`, user, { headers });
+  }
+  updateProduct(product: any): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    });
+
+    return this.http.put(`${this.apiUrl}/admin/update/product`, product, {headers});
+  }
+  deleteProduct(productId: number): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    });
+
+    return this.http.delete(`${this.apiUrl}/admin/delete/product/${productId}`, {headers});
   }
 }

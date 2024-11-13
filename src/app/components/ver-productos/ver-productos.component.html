@@ -4,7 +4,9 @@
       Categoría
     </label>
     <select class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="categoria" name="categoria" [(ngModel)]="selectedCategory" (click)="getCategories()">
-      <option *ngFor="let categoria of categories" [value]="categoria">{{categoria}}</option>
+      <option *ngFor="let categoria of categories" [value]="categoria">{{categoria}}
+        <p *ngIf="categories.length <= 0">No hay categorias creadas.</p>
+      </option>
     </select>
   </div>
   <button class="boton3"  (click)="getProductsByCategory()">
@@ -21,7 +23,8 @@
           <th scope="col" class="px-6 py-3 border-x-2 border-slate-500 w-1/5">Estado</th>
           <th scope="col" class="px-6 py-3 border-x-2 border-slate-500 w-1/5">Imagen</th>
           <th scope="col" class="px-6 py-3 border-x-2 border-slate-500 w-1/5">Descripción</th>
-          <th scope="col" class="px-6 py-3 border-x-2 border-slate-500 w-1/5 ">Acciones</th>
+          <th scope="col" class="px-6 py-3 border-x-2 border-slate-500 w-1/5 ">Editar</th>
+          <th scope="col" class="px-6 py-3 border-x-2 border-slate-500 w-1/5 ">Eliminar</th>
         </tr>
       </thead>
       <tbody>
@@ -35,21 +38,26 @@
           </td>
                     <td class="px-6 py-4 font-medium text-gray-900 border-x-2 border-slate-500 whitespace-nowrap">{{ producto.descripcion }}</td>
           <td class="px-6 py-4 font-medium text-gray-900 border-x-2 border-slate-500 whitespace-nowrap w-fit">
-            <button (click)="openEditModal(producto)">
-              <svg class="w-6 h-6 text-blue-500 hover:text-blue-700" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                <path d="M17.414 2.586a2 2 0 00-2.828 0L4 13.172V16h2.828l10.586-10.586a2 2 0 000-2.828zM12.828 3.414L14.586 5.172 9.414 10.344 7.656 8.586 12.828 3.414zM4 14v2h2l10.586-10.586L14.586 5.172 4 14z"></path>
-              </svg>
-            </button>
+              <mat-icon (click)="openEditModal(producto)"  class="mat-18 hover:cursor-pointer" >edit</mat-icon>
           </td>
+          <td class="px-6 py-4 font-medium text-gray-900 border-x-2 border-slate-500 whitespace-nowrap w-fit">
+            <mat-icon (click)="delete(producto.id)"  class="mat-18 hover:cursor-pointer" >delete</mat-icon>
+        </td>
         </tr>
       </tbody>
     </table>
   </div>
 </ng-container>
 
-<div *ngIf="isEditModalOpen" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20">
-  <div class="bg-white rounded-lg p-8 lg:w-1/3 w-11/12 mx-auto">
-    <div class="w-full">
+<div *ngIf="isEditModalOpen" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[200]">
+  <div class="bg-white rounded-lg p-8 lg:w-1/3 h-2/3 overflow-y-auto w-2/3 mx-auto">
+    <div class="flex justify-end items-center mb-4 mx-0 z-[201]">
+      <button (click)="closeEditModal()" class="fixed  z-[201] inline-flex items-center w-fit text-sm  rounded-lg ">
+        <span class="sr-only">Close menu</span>
+        <mat-icon class="mat-18">close</mat-icon>
+      </button>
+    </div>
+      <div class="w-full">
       <form class="bg-white rounded px-8 pt-6 pb-8 mb-4">
         <div class="mb-4">
           <label class="block text-gray-700 text-sm font-bold mb-2" for="nombreProducto">
@@ -82,11 +90,11 @@
         </div>
 
         <p class="text-red-500 text-sm text-left mb-2">{{alertPostMsg}}</p>
-        <div class="flex items-center justify-end">
-          <button class="ml-5 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline" type="button" (click)="saveChanges()">
-            Guardar cambios
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-end mt-6">
+          <button class="boton1 w-full sm:w-fit" type="button" (click)="saveChanges()">
+            Registrar
           </button>
-          <button class="ml-5 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline" type="button" (click)="closeEditModal()">
+          <button class="botonCancelar sm:w-fit w-full ml-0 sm:ml-5 mt-5 sm:mt-0" type="button" (click)="closeEditModal()">
             Cancelar
           </button>
         </div>
@@ -94,5 +102,3 @@
     </div>
   </div>
 </div>
-
-<app-ver-archivos></app-ver-archivos>

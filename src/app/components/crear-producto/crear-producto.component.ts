@@ -9,13 +9,13 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./crear-producto.component.css']
 })
 export class CrearProductoComponent implements OnInit {
-  producto: Producto = { nombre: '', precio: 0, categoria: '', estado: '',descripcion: '', imagen:null , nombre_negocio:'' ,imagenURL: ''};
+  producto: Producto = {id: 0, nombre: '', precio: 0, categoria: '', estado: '',descripcion: '', imagen:null , nombre_negocio:'' ,imagenURL: ''};
   isModalOpen = false;
   categories: string[] = [];
   products: any[] = [];
   alertPostMsg: string = '';
   selectedFile: File | null = null;
-
+  nombre_negocio: string = ''
   constructor(private iS: InventoryService, private authService: AuthService) {}
 
   getUserData() {
@@ -24,7 +24,7 @@ export class CrearProductoComponent implements OnInit {
       this.iS.getUserBusinessName(localStorage.getItem('username')).subscribe(
         data => {
           if (data && data.length > 0) {
-            this.producto.nombre_negocio = data[0].nombre_negocio;
+            this.nombre_negocio = data[0].nombre_negocio;
           }
         },
         error => {
@@ -34,9 +34,8 @@ export class CrearProductoComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {
+  ngOnInit()  {
     this.getCategories();
-    this.getProducts();
   }
 
   openModal() {
@@ -50,15 +49,18 @@ export class CrearProductoComponent implements OnInit {
   }
 
   getCategories() {
-    this.getUserData();
-    this.iS.getCategories(this.producto.nombre_negocio).subscribe(
-      data => {
-        this.categories = data.map((item: any) => item.categoria);
-      },
-      error => {
-        console.error('Error fetching categories', error);
-      }
-    );
+    this.getUserData()
+    if(this.nombre_negocio != ''){
+      this.iS.getCategories(this.nombre_negocio).subscribe(
+        data => {
+          this.categories = data.map((item: any) => item.categoria);
+        },
+        error => {
+          console.error('Error fetching categories', error);
+        }
+      );
+    }
+
   }
 
   getProducts() {
@@ -86,47 +88,45 @@ export class CrearProductoComponent implements OnInit {
   }
 
   postProducto() {
-    const { nombre, precio, categoria, estado, descripcion, nombre_negocio } = this.producto;
-    if (!nombre.trim() || precio <= 0 || !['activo', 'inactivo'].includes(estado)) {
-      this.alertPostMsg = 'Todos los campos son obligatorios y deben tener valores válidos.';
-      return;
-    }
-
     // Verificar si el producto ya existe
     const productoExistente = this.products.find(
       p => p.nombre.toLowerCase() === nombre.trim().toLowerCase() && p.categoria.toLowerCase() === categoria.trim().toLowerCase()
     );
-
-    if (productoExistente) {
+    const { nombre, precio, categoria, estado, descripcion, nombre_negocio } = this.producto;
+    if (!nombre.trim() || precio <= 0 || !['activo', 'inactivo'].includes(estado) || !this.categories.includes(categoria) || !descripcion.trim()) {
+      this.alertPostMsg = 'Todos los campos son obligatorios y deben tener valores válidos.';
+      return;
+    }else if(productoExistente){
       this.alertPostMsg = 'El producto ya existe en esta categoría.';
       return;
     }
+    else{
+      // Crear FormData y añadir los datos del producto y la imagen
+      const formData = new FormData();
+      formData.append('nombre', nombre);
+      formData.append('precio', precio.toString());
+      formData.append('categoria', categoria);
+      formData.append('estado', estado);
+      formData.append('descripcion', descripcion);
+      formData.append('nombre_negocio', nombre_negocio);
 
-    // Crear FormData y añadir los datos del producto y la imagen
-    const formData = new FormData();
-    formData.append('nombre', nombre);
-    formData.append('precio', precio.toString());
-    formData.append('categoria', categoria);
-    formData.append('estado', estado);
-    formData.append('descripcion', descripcion);
-    formData.append('nombre_negocio', nombre_negocio);
-
-    // Añadir la imagen solo si ha sido seleccionada
-    if (this.selectedFile) {
-      formData.append('imagen', this.selectedFile, this.selectedFile.name);
-    }
-
-    this.iS.postProduct(formData).subscribe(
-      () => {
-        alert('Error al registrar el producto');
-        console.error("error");
-      },
-      err => {
-        alert('Producto registrado exitosamente');
-        this.closeModal();
-        this.getProducts(); // Actualizar la lista de productos
-
+      // Añadir la imagen solo si ha sido seleccionada
+      if (this.selectedFile) {
+        formData.append('imagen', this.selectedFile, this.selectedFile.name);
       }
-    );
+
+      this.iS.postProduct(formData).subscribe(
+        () => {
+          alert('Error al registrar el producto');
+          console.error("error");
+        },
+        err => {
+          alert('Producto registrado exitosamente');
+          this.closeModal();
+          this.getProducts(); // Actualizar la lista de productos
+
+        }
+      );
+    }
   }
 }

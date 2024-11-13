@@ -36,7 +36,6 @@ import { VerMesasComponent } from './pages/ver-mesas/ver-mesas.component';
 import { MesasCreadasComponent } from './components/mesas-creadas/mesas-creadas.component';
 import { MesasMeseroComponent } from './components/mesas-mesero/mesas-mesero.component';
 import { VerUsuariosComponent } from './components/ver-usuarios/ver-usuarios.component';
-import { VerArchivosComponent } from './components/ver-archivos/ver-archivos.component';
 import { AgregarArchivosComponent } from './components/agregar-archivos/agregar-archivos.component';
 
 @NgModule({
@@ -65,7 +64,6 @@ import { AgregarArchivosComponent } from './components/agregar-archivos/agregar-
     MesasCreadasComponent,
     MesasMeseroComponent,
     VerUsuariosComponent,
-    VerArchivosComponent,
     AgregarArchivosComponent
     ],
   imports: [

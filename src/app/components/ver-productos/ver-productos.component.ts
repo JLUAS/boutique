@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { InventoryService } from '../../services/inventory.service';
-import { Producto } from '../../models/Producto';
+import { Producto, ProductoEditable } from '../../models/Producto';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { FileService } from '../../services/file.service';
 import { AuthService } from '../../services/auth.service';
@@ -14,7 +14,8 @@ export class VerProductosComponent implements OnInit {
   categories: string[] = [];
   selectedCategory: string = '';
   products: Producto[] = [];
-  producto: Producto = { nombre: '', precio: 0, categoria: '', estado: '', imagen: null, descripcion: '', nombre_negocio: '', imagenURL: ''};
+  producto: Producto = {id: 0, nombre: '', precio: 0, categoria: '', estado: '', imagen: null, descripcion: '', nombre_negocio: '', imagenURL: ''};
+  productoEditable = {nombre: '', precio: 0, categoria: '', estado: ''}
   isModalOpen = false;
   isEditModalOpen = false;
   rolSuper: boolean = false;
@@ -22,14 +23,12 @@ export class VerProductosComponent implements OnInit {
   nombre_negocio: string = '';
   url:string = '';
   prueba = true
-
+  isLoading:boolean = false
   constructor(private iS: InventoryService, private fileService: FileService, private sanitizer: DomSanitizer, private aS: AuthService) {}
 
   ngOnInit(): void {
-    this.getCategories();
+    this.getCategories()
     this.selectedCategory = this.categories[0];
-    this.getProductsByCategory();
-
     if (this.aS.getRole() == 'super') {
       this.rolSuper = true;
     } else {
@@ -48,6 +47,7 @@ export class VerProductosComponent implements OnInit {
   openEditModal(producto: Producto) {
     this.producto = { ...producto };
     this.isEditModalOpen = true;
+    this.getCategories();
   }
 
   closeEditModal() {
@@ -74,18 +74,33 @@ export class VerProductosComponent implements OnInit {
 
   getCategories() {
     this.getUserData();
-    this.iS.getCategories(this.nombre_negocio).subscribe(
-      data => {
-        this.categories = data.map((item: any) => item.categoria);
-      },
-      error => {
-        console.error('Error fetching categories', error);
-      }
-    );
-    console.log(this.categories);
+    if(this.nombre_negocio || this.isEditModalOpen){
+      this.iS.getCategories(this.nombre_negocio).subscribe(
+        data => {
+          this.categories = data.map((item: any) => item.categoria);
+        },
+        error => {
+          console.error('Error fetching categories', error);
+        }
+      );
+    }
   }
 
   getProductsByCategory() {
+    if (this.selectedCategory) {
+        this.iS.getProductsByCategory(this.nombre_negocio, this.selectedCategory).subscribe(
+          data => {
+            this.products = data;
+            this.products.forEach(product => this.loadFile(product.nombre));
+          },
+          error => {
+            console.error('Error fetching products by category', error);
+          }
+        );
+    }
+  }
+
+  getAllProducts() {
     if (this.selectedCategory) {
       if(this.rolSuper){
         this.iS.getAllProducts().subscribe(
@@ -112,11 +127,11 @@ export class VerProductosComponent implements OnInit {
     }
   }
 
+
   loadFile(nombre: string) {
     this.fileService.downloadFile(nombre).subscribe({
       next: (imageBlob) => {
         const url = window.URL.createObjectURL(imageBlob);
-        console.log(url)
         const productIndex = this.products.findIndex(product => product.nombre === nombre);
         if (productIndex !== -1) {
           this.products[productIndex].imagenURL = url;
@@ -127,22 +142,34 @@ export class VerProductosComponent implements OnInit {
       }
     });
   }
-
   saveChanges() {
-    const { nombre, precio, categoria, estado } = this.producto;
+    const { nombre, precio, categoria, estado, descripcion } = this.producto;
 
-    if (!nombre.trim() || precio <= 0 || !categoria.trim() || !['activo', 'inactivo'].includes(estado)) {
+    if (!nombre.trim() || precio <= 0 || !['activo', 'inactivo'].includes(estado) || !this.categories.includes(categoria) || !descripcion.trim()) {
       this.alertPostMsg = 'Todos los campos son obligatorios y deben tener valores válidos.';
       return;
+    }else{
+      this.productoEditable.nombre = this.producto.nombre
+      this.productoEditable.precio = this.producto.precio
+      this.productoEditable.categoria = this.producto.categoria
+      this.productoEditable.estado = this.producto.estado
+      this.iS.updateProduct(this.productoEditable).subscribe(() => {
+        alert("Producto actualizado exitosamente");
+        this.closeEditModal();
+        this.getProductsByCategory();  // Refresh the product list
+      }, err => {
+        alert("Producto actualizado exitosamente");
+        this.closeEditModal();
+        this.getProductsByCategory();  // Refresh the product list
+      });
     }
-
-    this.iS.updateProduct(this.producto).subscribe(() => {
-      alert("Producto actualizado exitosamente");
-      this.closeEditModal();
+  }
+  delete(productoId: number) {
+    this.iS.deleteProduct(productoId).subscribe(() => {
+      alert("Producto eliminado exitosamente");
       this.getProductsByCategory();  // Refresh the product list
     }, err => {
-      alert("Producto actualizado exitosamente");
-      this.closeEditModal();
+      alert("Producto eliminado exitosamente");
       this.getProductsByCategory();  // Refresh the product list
     });
   }

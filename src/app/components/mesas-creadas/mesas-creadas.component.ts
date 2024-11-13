@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MesaService } from '../../services/mesa.service';
 import { MatButtonModule } from '@angular/material/button';
 import { Mesa } from '../../models/Mesa';
+import { InventoryService } from '../../services/inventory.service';
 
 @Component({
   selector: 'app-mesas-creadas',
@@ -10,25 +11,41 @@ import { Mesa } from '../../models/Mesa';
 })
 export class MesasCreadasComponent implements OnInit {
   mesas: any[] = []
-  mesa: Mesa ={mesa: 0, estado: ''}
+  mesa: Mesa ={mesa: 0, estado: '', personas: 0}
   isEditModalOpen: boolean = false
   isLoading = false;
   alertPostMsg: string = '';
-
-  constructor(private mS: MesaService){}
+  nombre_negocio:string = '';
+  try:number = 0
+  constructor(private mS: MesaService, private iS: InventoryService){}
 
   ngOnInit(): void {
-    this.getMesas()
+    this.getMesas();
+  }
+  getUserData() {
+    if (localStorage.getItem('username')) {
+      this.iS.getUserBusinessName(localStorage.getItem('username')).subscribe(
+        data => {
+          if (data && data.length > 0) {
+            this.nombre_negocio = data[0].nombre_negocio;
+          }
+        },
+        error => {
+          console.error('Error fetching users by category', error);
+        }
+      );
+    }
   }
   getMesas(){
-    this.mS.getMesas().subscribe(
-      data => {
-        this.mesas = data;
-      },
-      error => {
-        console.error('Error fetching products by category', error);
-      }
-    )
+    this.getUserData();
+    console.log(this.nombre_negocio)
+    if(this.nombre_negocio != '' && this.try == 0){
+      this.mS.getMesas(this.nombre_negocio).subscribe((mesas: Mesa[]) => {
+        this.mesas = mesas;
+      });
+      console.log(this.try)
+      this.try = 1
+    }
   }
 
   openEditModal(mesa: Mesa) {

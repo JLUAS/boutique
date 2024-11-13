@@ -107,7 +107,7 @@ export class VerUsuariosComponent {
 
   saveChanges() {
     console.log(this.user)
-    this.iS.updateProduct(this.user).subscribe(() => {
+    this.iS.updateUser(this.user).subscribe(() => {
       alert("Producto actualizado exitosamente");
       this.closeEditModal();
       this.getUsersByRol();  // Refresh the product list
